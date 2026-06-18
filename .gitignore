@@ -9,3 +9,5 @@ env/
 .pytest_cache/
 outputs/
 .DS_Store
+.codegraph
+run_benchmark_parts.sh

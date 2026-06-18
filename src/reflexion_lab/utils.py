@@ -11,9 +11,12 @@ def normalize_answer(text: str) -> str:
     text = re.sub(r"\s+", " ", text)
     return text
 
-def load_dataset(path: str | Path) -> list[QAExample]:
+def load_dataset(
+    path: str | Path, offset: int = 0, limit: int | None = None
+) -> list[QAExample]:
     raw = json.loads(Path(path).read_text(encoding="utf-8"))
-    return [QAExample.model_validate(item) for item in raw]
+    selected = raw[offset:] if limit is None else raw[offset : offset + limit]
+    return [QAExample.model_validate(item) for item in selected]
 
 def save_jsonl(path: str | Path, records: Iterable[RunRecord]) -> None:
     path = Path(path)

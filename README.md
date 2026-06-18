@@ -1,5 +1,39 @@
 # Lab 16 — Reflexion Agent
 
+## Chạy ngay với Golden Test Set
+
+```bash
+# Chạy offline, không cần API key
+.venv/bin/python run_benchmark.py
+
+# Chạy LLM thật và nhập đơn giá model theo USD / 1M total tokens
+.venv/bin/python run_benchmark.py --mode llm --usd-per-million-tokens 0.50
+```
+
+Mặc định chương trình đọc `data/hotpot_golden.json` và ghi:
+
+- `outputs/golden_run/react_runs.jsonl`
+- `outputs/golden_run/reflexion_runs.jsonl`
+- `outputs/golden_run/report.json`
+- `outputs/golden_run/report.md`
+
+`report.md` có bảng so sánh ReAct/Reflexion, kết quả EM, token, model
+latency, wall-clock running time và estimated cost. Cost được tính bằng:
+`total_tokens × usd_per_million_tokens / 1_000_000`.
+
+### Tạo report đủ 100 records để chấm rubric
+
+```bash
+.venv/bin/python run_benchmark.py \
+  --dataset data/hotpot_dev_distractor_v1.json \
+  --limit 50 \
+  --out-dir submission_run
+.venv/bin/python autograde.py --report-path submission_run/report.json
+```
+
+50 câu chạy qua cả ReAct và Reflexion tạo 100 records. Golden test 20 mẫu
+được giữ riêng để đánh giá chất lượng LLM.
+
 ## Tổng quan
 
 Bài lab giúp bạn hiểu và triển khai **Reflexion Agent** — một kiến trúc agent có khả năng tự phản chiếu (self-reflection) để cải thiện câu trả lời qua nhiều lần thử.
